@@ -79,16 +79,16 @@ func NactuHudbuKonecHry(nazev_souboru string) (*audio.Context, *audio.Player) {
 }
 
 func NaraziDoBloku(postava AnimovanaPostava, blok Blok) bool {
-	obdelnikPostavy := resolv.NewRectangle(
+	obdelnikPostavy := resolv.NewRectangleFromTopLeft(
 		float64(postava.misto.x),
 		float64(postava.misto.y),
-		float64(postava.obdelnikySAnimaci[0].Dx()),
-		float64(postava.obdelnikySAnimaci[0].Dy()))
-	obdelnikBloku := resolv.NewRectangle(
+		float64(postava.obdelnikySAnimaci[0].Dx())*3,
+		float64(postava.obdelnikySAnimaci[0].Dy())*3)
+	obdelnikBloku := resolv.NewRectangleFromTopLeft(
 		float64(blok.misto.x),
 		float64(blok.misto.y),
-		float64(blok.vyrezany_obrazek.Dx()),
-		float64(blok.vyrezany_obrazek.Dy()))
+		float64(blok.vyrezany_obrazek.Dx())*float64(blok.zvetseniZmenseni),
+		float64(blok.vyrezany_obrazek.Dy())*float64(blok.zvetseniZmenseni))
 	return obdelnikPostavy.IsIntersecting(obdelnikBloku)
 }
 
@@ -277,7 +277,7 @@ func main() {
 
 	var blok1 Blok
 	blok1.obrazek = NactiObrazek("./Rock Pile.png")
-	blok1.vyrezany_obrazek = image.Rect(0, 0, 255, 255)
+	blok1.vyrezany_obrazek = image.Rect(0, 0, 160, 160)
 	blok1.misto.x = 400
 	blok1.misto.y = 200
 	blok1.zvetseniZmenseni = 1
@@ -313,8 +313,8 @@ func NactuHudbu(nazev_souboru string) (*audio.Context, *audio.Player) {
 	return context, player
 }
 func Protinajise(a AnimovanaPostava, b AnimovanaPostava) bool {
-	obdelnikA := resolv.NewRectangle(float64(a.misto.x), float64(a.misto.y), float64(a.obdelnikySAnimaci[0].Dx()), float64(a.obdelnikySAnimaci[0].Dy()))
-	obdelnikB := resolv.NewRectangle(float64(b.misto.x), float64(b.misto.y), float64(b.obdelnikySAnimaci[0].Dx()), float64(b.obdelnikySAnimaci[0].Dy()))
+	obdelnikA := resolv.NewRectangleFromTopLeft(float64(a.misto.x), float64(a.misto.y), float64(a.obdelnikySAnimaci[0].Dx())*3, float64(a.obdelnikySAnimaci[0].Dy())*3)
+	obdelnikB := resolv.NewRectangleFromTopLeft(float64(b.misto.x), float64(b.misto.y), float64(b.obdelnikySAnimaci[0].Dx())*3, float64(b.obdelnikySAnimaci[0].Dy())*3)
 
 	return obdelnikA.IsIntersecting(obdelnikB)
 }
