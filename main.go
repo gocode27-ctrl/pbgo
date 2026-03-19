@@ -95,7 +95,7 @@ func NaraziDoBloku(postava AnimovanaPostava, blok Blok) bool {
 func NaraziDoNejakehoBloku(postava AnimovanaPostava, bloky []Blok) bool {
 	for index := range bloky {
 		blok := bloky[index]
-		fmt.Println(postava.misto, postava.obdelnikySAnimaci[0].Dx(), postava.obdelnikySAnimaci[0].Dy(), "------", blok.misto, blok.vyrezany_obrazek.Dx(), blok.vyrezany_obrazek.Dy())
+		//fmt.Println(postava.misto, postava.obdelnikySAnimaci[0].Dx(), postava.obdelnikySAnimaci[0].Dy(), "------", blok.misto, blok.vyrezany_obrazek.Dx(), blok.vyrezany_obrazek.Dy())
 		if NaraziDoBloku(postava, blok) {
 			return true
 		}
@@ -119,33 +119,33 @@ func (h *Hra) Update() error {
 	for _, zmacknuta_klavesa := range zmacknute_klavesy {
 		if zmacknuta_klavesa == ebiten.KeyD {
 			h.obrazekPostavy.misto.x += 1
-			fmt.Println("Jdi do prava")
+			//fmt.Println("Jdi do prava")
 			if NaraziDoNejakehoBloku(h.obrazekPostavy, h.poleBloku) {
-				fmt.Println("BLOK")
+				//fmt.Println("BLOK")
 				h.obrazekPostavy.misto.x -= 1
 			}
 		}
 		if zmacknuta_klavesa == ebiten.KeyA {
 			h.obrazekPostavy.misto.x -= 1
-			fmt.Println("Jdi do leva")
+			//fmt.Println("Jdi do leva")
 			if NaraziDoNejakehoBloku(h.obrazekPostavy, h.poleBloku) {
-				fmt.Println("BLOK")
+				//fmt.Println("BLOK")
 				h.obrazekPostavy.misto.x += 1
 			}
 		}
 		if zmacknuta_klavesa == ebiten.KeyS {
 			h.obrazekPostavy.misto.y += 1
-			fmt.Println("Jdi do dolu")
+			//fmt.Println("Jdi do dolu")
 			if NaraziDoNejakehoBloku(h.obrazekPostavy, h.poleBloku) {
-				fmt.Println("BLOK")
+				//fmt.Println("BLOK")
 				h.obrazekPostavy.misto.y -= 1
 			}
 		}
 		if zmacknuta_klavesa == ebiten.KeyW {
 			h.obrazekPostavy.misto.y -= 1
-			fmt.Println("Jdi do nahoru")
+			//fmt.Println("Jdi do nahoru")
 			if NaraziDoNejakehoBloku(h.obrazekPostavy, h.poleBloku) {
-				fmt.Println("BLOK")
+				//fmt.Println("BLOK")
 				h.obrazekPostavy.misto.y += 1
 			}
 		}
@@ -236,7 +236,7 @@ func NactiObrazek(cesta_k_obrazku string) *ebiten.Image {
 }
 
 // main je hlavní funkce - tady naše hra začína
-func main() {
+func tadySeSpustíHra() {
 	// Vytvoříme si novou hru
 	var hra Hra
 
@@ -257,8 +257,8 @@ func main() {
 	npc1.obdelnikySAnimaci = append(npc1.obdelnikySAnimaci, image.Rect(9, 82, 37, 125))
 	npc1.obdelnikySAnimaci = append(npc1.obdelnikySAnimaci, image.Rect(57, 82, 85, 125))
 	npc1.obdelnikySAnimaci = append(npc1.obdelnikySAnimaci, image.Rect(104, 82, 133, 125))
-	npc1.misto.x = -1000000000
-	npc1.misto.y = -1000000000
+	npc1.misto.x = 300
+	npc1.misto.y = 100
 	hra.poleNpc = append(hra.poleNpc, npc1)
 
 	var npc2 AnimovanaPostava
@@ -267,8 +267,8 @@ func main() {
 	npc2.obdelnikySAnimaci = append(npc2.obdelnikySAnimaci, image.Rect(9, 82, 37, 125))
 	npc2.obdelnikySAnimaci = append(npc2.obdelnikySAnimaci, image.Rect(57, 82, 85, 125))
 	npc2.obdelnikySAnimaci = append(npc2.obdelnikySAnimaci, image.Rect(104, 82, 133, 125))
-	npc2.misto.x = -1000000000
-	npc2.misto.y = -1000000000
+	npc2.misto.x = 300
+	npc2.misto.y = 100
 	hra.poleNpc = append(hra.poleNpc, npc2)
 
 	hra.hudbaVPozadiContext, hra.hudbaVPozadiPlayer = NactuHudbu("./with_me.mp3")
