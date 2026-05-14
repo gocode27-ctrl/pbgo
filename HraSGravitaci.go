@@ -143,17 +143,20 @@ func main() {
 	)
 
 	nepritel := gke.PridejNepritele(
-		"./Ninja.png",
+		"./pacman.png",
 		func(enemy *gke.Postava) []gke.Akce {
 			x := gke.ZjistitPoziciX(&hratelna_postava.Blok)
 			y := gke.ZjistitPoziciY(&hratelna_postava.Blok)
 			x_enemy := gke.ZjistitPoziciX(&enemy.Blok)
 			y_enemy := gke.ZjistitPoziciY(&enemy.Blok)
+			var akce gke.Akce
 			if x > x_enemy {
 				x_enemy += 0.5
+				akce = gke.AkceJdeVPravo
 			}
 			if x < x_enemy {
 				x_enemy -= 0.5
+				akce = gke.AkceJdeVLevo
 			}
 			if y > y_enemy {
 				y_enemy += 1
@@ -165,22 +168,20 @@ func main() {
 			if gke.ZjistiKontaktSHratelnouPostavou(enemy) {
 				gke.NastavPozici(&hratelna_postava.Blok, x-100, y)
 			}
-			return []gke.Akce{}
+			return []gke.Akce{akce}
 		},
 	)
 
 	gke.NastavPozici(&nepritel.Blok, 300.0, 1826.0)
-	gke.NastavZvetseni(&nepritel.Blok, 1)
-	gke.NastavZvetseni(&nepritel.Blok, 3.0)
+	gke.NastavZvetseni(&nepritel.Blok, 0.5)
 	gke.NastavBlokovani(&nepritel.Blok, false)
+	gke.NastavAnimaci(nepritel, gke.AkceJdeVLevo, true,
+		[]gke.Vyrez{
+			{X1: 19, Y1: 19, X2: 194, Y2: 202},
+		})
 	gke.NastavAnimaci(nepritel, gke.AkceJdeVPravo, false,
 		[]gke.Vyrez{
-			{X1: 71, Y1: 26, X2: 51, Y2: 10},
-			{X1: 65, Y1: 54, X2: 51, Y2: 40},
-			{X1: 67, Y1: 86, X2: 50, Y2: 70},
-			{X1: 73, Y1: 116, X2: 51, Y2: 100},
-			{X1: 69, Y1: 145, X2: 51, Y2: 130},
-			{X1: 51, Y1: 160, X2: 73, Y2: 176},
+			{X1: 19, Y1: 19, X2: 194, Y2: 202},
 		})
 
 	gke.NastavPozici(&spike.Blok, 410, 1510)
