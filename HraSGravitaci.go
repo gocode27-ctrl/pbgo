@@ -5,7 +5,66 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
+func pevnyBlok(x float64, y float64, velikost float64) {
+	blok := gke.PridejBlok("./Rock Pile.png")
+	gke.NastavPozici(blok, x, y)
+	gke.NastavZvetseni(blok, velikost)
+	gke.NastavBlokovani(blok, true)
+}
+
+func pevnyBlokplatforma(x float64, y float64, velikost float64) {
+	blok := gke.PridejBlokSVyrezem("./platform2.png", gke.Vyrez{X1: 232, Y1: 78, X2: 661, Y2: 332})
+	gke.NastavPozici(blok, x, y)
+	gke.NastavZvetseni(blok, velikost)
+	gke.NastavBlokovani(blok, true)
+}
+
+func pridejNepritele_pacman(hratelna_postava *gke.Postava, vyska float64, levaHranice float64, pravaHranice float64) {
+	jdeDoPrava := true
+	nepritel := gke.PridejNepritele(
+		"./pacman.png",
+		func(enemy *gke.Postava) []gke.Akce {
+			x := gke.ZjistitPoziciX(&hratelna_postava.Blok)
+			y := gke.ZjistitPoziciY(&hratelna_postava.Blok)
+			x_enemy := gke.ZjistitPoziciX(&enemy.Blok)
+			var akce gke.Akce
+			if jdeDoPrava {
+				x_enemy += 0.5
+				akce = gke.AkceJdeVPravo
+			} else {
+				x_enemy -= 0.5
+				akce = gke.AkceJdeVLevo
+			}
+			if x_enemy > pravaHranice {
+				jdeDoPrava = false
+			}
+			if x_enemy < levaHranice {
+				jdeDoPrava = true
+			}
+			gke.NastavPozici(&enemy.Blok, x_enemy, vyska)
+			if gke.ZjistiKontaktSHratelnouPostavou(enemy) {
+				gke.NastavPozici(&hratelna_postava.Blok, x-50, y)
+			}
+			return []gke.Akce{akce}
+		},
+	)
+
+	gke.NastavPozici(&nepritel.Blok, 300.0, 1826.0)
+	gke.NastavZvetseni(&nepritel.Blok, 0.3)
+	gke.NastavRychlostPohybu(nepritel, 0.5)
+	gke.NastavBlokovani(&nepritel.Blok, false)
+	gke.NastavAnimaci(nepritel, gke.AkceJdeVLevo, true,
+		[]gke.Vyrez{
+			{X1: 19, Y1: 19, X2: 194, Y2: 202},
+		})
+	gke.NastavAnimaci(nepritel, gke.AkceJdeVPravo, false,
+		[]gke.Vyrez{
+			{X1: 19, Y1: 19, X2: 194, Y2: 202},
+		})
+}
+
 func main() {
+
 	gke.NastavSouradnicivouMrizku(50)
 	gke.NastavUrovenLogovani(gke.LogError)
 	gke.NastavPozadi("./Pozadi.png")
@@ -17,30 +76,17 @@ func main() {
 	gke.NastavPozici(kamen, 175, 1850)
 	gke.NastavBlokovani(kamen, true)
 
-	kamen2 := gke.PridejBlok("./Rock Pile.png")
-	gke.NastavZvetseni(kamen2, 0.3)
-	gke.NastavPozici(kamen2, 100, 1746)
-	gke.NastavBlokovani(kamen2, true)
+	pevnyBlok(100, 1746, 0.3)
 
-	kamen3 := gke.PridejBlok("./Rock Pile.png")
-	gke.NastavZvetseni(kamen3, 0.3)
-	gke.NastavPozici(kamen3, 250, 1650)
-	gke.NastavBlokovani(kamen3, true)
+	pevnyBlok(250, 1650, 0.3)
 
-	kamen4 := gke.PridejBlok("./Rock Pile.png")
-	gke.NastavZvetseni(kamen4, 0.3)
-	gke.NastavPozici(kamen4, 550, 1450)
-	gke.NastavBlokovani(kamen4, true)
+	pevnyBlok(550, 1450, 0.3)
 
-	kamen5 := gke.PridejBlokSVyrezem("./platform2.png", gke.Vyrez{X1: 232, Y1: 78, X2: 661, Y2: 332})
-	gke.NastavZvetseni(kamen5, 0.3)
-	gke.NastavPozici(kamen5, 360, 1550)
-	gke.NastavBlokovani(kamen5, true)
+	pevnyBlokplatforma(360, 1550, 0.3)
 
-	//blok2 := gke.PridejBlokSVyrezem("./Pozadi.png", gke.Vyrez{X1: 0, Y1: 223, X2: 478, Y2: 221})
-	//gke.NastavPozici(blok2, 0, 223)
-	//gke.NastavBlokovani(blok2, true)
-	//gke.NastavZvetseni(blok2, 0.9)
+	pevnyBlokplatforma(700, 1360, 0.3)
+
+	pevnyBlokplatforma(800, 1360, 0.3)
 
 	blok_cislo_n := 0.0
 	for blok_cislo_n <= 100 {
@@ -61,6 +107,11 @@ func main() {
 	gke.NastavZvetseni(animovany_blok, 2.0)
 	gke.NastavPozici(animovany_blok, 460, 1770)
 
+	animovany_blok2 := gke.PridejAnimovanyBlok("./animated tree.png", 0.1, animace_stromu...)
+	gke.NastavZvetseni(animovany_blok2, 2.0)
+	gke.NastavPozici(animovany_blok2, -100, 1770)
+	gke.NastavBlokovani(animovany_blok2, true)
+
 	//70 25 51 11 / 65 55 51 40/
 	hratelna_postava := gke.PrijdejHratelnouPostavu("./Ninja.png",
 		0.1, map[ebiten.Key]gke.Akce{
@@ -71,7 +122,7 @@ func main() {
 	)
 	gke.NastavZvetseni(&hratelna_postava.Blok, 3.0)
 	gke.NastavPozici(&hratelna_postava.Blok, 480.0, 1826.0)
-	gke.NastavRychlostPohybu(hratelna_postava, 1.25)
+	gke.NastavRychlostPohybu(hratelna_postava, 1.4)
 	gke.NastavAnimaci(hratelna_postava, gke.AkceStoji, false,
 		[]gke.Vyrez{
 			{X1: 11, Y1: 11, X2: 25, Y2: 25},
@@ -142,7 +193,10 @@ func main() {
 	}(),
 	)
 
-	nepritel := gke.PridejNepritele(
+	pridejNepritele_pacman(hratelna_postava, 1620, 100, 360)
+	pridejNepritele_pacman(hratelna_postava, 1400, 100, 360)
+
+	/*nepritel := gke.PridejNepritele(
 		"./pacman.png",
 		func(enemy *gke.Postava) []gke.Akce {
 			x := gke.ZjistitPoziciX(&hratelna_postava.Blok)
@@ -164,7 +218,7 @@ func main() {
 			if y < y_enemy {
 				y_enemy -= 1
 			}
-			gke.NastavPozici(&enemy.Blok, x_enemy, y_enemy)
+			gke.NastavPozici(&enemy.Blok, x_enemy, 1828)
 			if gke.ZjistiKontaktSHratelnouPostavou(enemy) {
 				gke.NastavPozici(&hratelna_postava.Blok, x-100, y)
 			}
@@ -172,8 +226,9 @@ func main() {
 		},
 	)
 
-	gke.NastavPozici(&nepritel.Blok, 300.0, 1826.0)
-	gke.NastavZvetseni(&nepritel.Blok, 0.5)
+	gke.NastavPozici(&nepritel.Blok, 300.0, 1828.0)
+	gke.NastavZvetseni(&nepritel.Blok, 0.26)
+	gke.NastavRychlostPohybu(nepritel, 0.5)
 	gke.NastavBlokovani(&nepritel.Blok, false)
 	gke.NastavAnimaci(nepritel, gke.AkceJdeVLevo, true,
 		[]gke.Vyrez{
@@ -183,7 +238,7 @@ func main() {
 		[]gke.Vyrez{
 			{X1: 19, Y1: 19, X2: 194, Y2: 202},
 		})
-
+	*/
 	gke.NastavPozici(&spike.Blok, 410, 1510)
 	gke.NastavZvetseni(&spike.Blok, 0.4)
 
