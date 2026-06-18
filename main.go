@@ -54,6 +54,8 @@ type Hra struct {
 	hudbaGameOverPlayer  *audio.Player
 }
 
+//
+
 func NactuHudbuKonecHry(nazev_souboru string) (*audio.Context, *audio.Player) {
 	context := audio.NewContext(160000)
 	soubor, err := os.ReadFile(nazev_souboru)

@@ -1,4 +1,4 @@
-module plizivec
+module MojeHra
 
 go 1.25.7
 
