@@ -12,7 +12,7 @@ import (
 )
 
 func ProhralJsi(zivoty *int, textSmrti string, hudbaVPozadiPlayer *audio.Player) {
-	hudbaGameOverContext, hudbaGameOverPlayer := NactuHudbu("./assetykehre/Game Over.mp3")
+	hudbaGameOverContext, hudbaGameOverPlayer := NactuHudbu("assetykehre/Game Over.mp3")
 	_ = hudbaGameOverContext
 
 	obrazovkaSmrti := gke.NastavKonecovouObrazovku(textSmrti, "Zkus to znovu")
@@ -110,7 +110,7 @@ func pridejNepritele_pacman(hratelna_postava *gke.Postava, vyska float64, levaHr
 		})
 }
 
-// go : embed all:assetykehre
+//go:embed all:assetykehre
 var assets embed.FS
 
 func main() {
@@ -118,16 +118,17 @@ func main() {
 	PosledniRana := time.Now()
 	CasovaMezeraMeziRanou := 1 * time.Second
 	//gke.NastavSouradnicivouMrizku(50)
+	gke.NastavSlozkuSObrazky(&assets)
 	gke.NastavUrovenLogovani(gke.LogError)
 	gke.NastavPozadi("./assetykehre/Pozadi.png")
 	gke.NastavRezimPozadi(gke.RezimPozadiVyplnit)
 	gke.NastavGravitaci(0.1)
 
-	hudbaVPozadiContext, hudbaVPozadiPlayer := NactuHudbu("./assetykehre/with_me.mp3")
+	hudbaVPozadiContext, hudbaVPozadiPlayer := NactuHudbu("assetykehre/with_me.mp3")
 	_ = hudbaVPozadiContext
 	hudbaVPozadiPlayer.Play()
 
-	hudbaVPozadiContext2, hudbaVPozadiPlayer2 := NactuHudbuJednou("./assetykehre/losetrumpet.mp3")
+	hudbaVPozadiContext2, hudbaVPozadiPlayer2 := NactuHudbuJednou("assetykehre/losetrumpet.mp3")
 	_ = hudbaVPozadiContext2
 
 	kamen := gke.PridejBlok("./assetykehre/Rock Pile.png")

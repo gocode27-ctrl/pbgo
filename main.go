@@ -295,7 +295,7 @@ func NactuHudbu(nazev_souboru string) (*audio.Context, *audio.Player) {
 		context = audio.NewContext(160000)
 	}
 
-	soubor, err := os.ReadFile(nazev_souboru)
+	soubor, err := assets.ReadFile(nazev_souboru)
 	if err != nil {
 		fmt.Println("Soubor s hudbou se nepodařilo načíst", err)
 		os.Exit(1)
@@ -321,7 +321,7 @@ func NactuHudbuJednou(nazev_souboru string) (*audio.Context, *audio.Player) {
 		context = audio.NewContext(160000)
 	}
 
-	soubor, err := os.ReadFile(nazev_souboru)
+	soubor, err := assets.ReadFile(nazev_souboru)
 	if err != nil {
 		fmt.Println("Soubor s hudbou se nepodařilo načíst", err)
 		os.Exit(1)
