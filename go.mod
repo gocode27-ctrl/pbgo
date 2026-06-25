@@ -3,14 +3,14 @@ module MojeHra
 go 1.25.7
 
 require (
-	github.com/Fanteria/go-krouzek-engine v0.0.0-20260611114837-9ad014c78472
+	github.com/Fanteria/go-krouzek-engine v0.0.0-20260625135258-c2fdbae87e15
 	github.com/hajimehoshi/ebiten/v2 v2.9.9
 )
 
 require (
 	github.com/ebitengine/oto/v3 v3.4.0 // indirect
 	github.com/hajimehoshi/go-mp3 v0.3.4 // indirect
-	golang.org/x/image v0.42.0 // indirect
+	golang.org/x/image v0.43.0 // indirect
 )
 
 require (

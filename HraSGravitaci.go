@@ -54,7 +54,7 @@ func pevnyBlokplatforma(x float64, y float64, velikost float64) {
 }
 
 func pridejNepritele_pacman(hratelna_postava *gke.Postava, vyska float64, levaHranice float64, pravaHranice float64, HracovyZivoty *int,
-	CasovaMezeraMeziRanou time.Duration, hudbaGameOverPlayer *audio.Player) {
+	CasovaMezeraMeziRanou time.Duration, hudbaGameOverPlayer *audio.Player, hudbaUbraniZivota *audio.Player) {
 	PosledniRana := time.Now()
 	jdeDoPrava := true
 	nepritel := gke.PridejNepritele(
@@ -83,6 +83,8 @@ func pridejNepritele_pacman(hratelna_postava *gke.Postava, vyska float64, levaHr
 				now := time.Now()
 				if now.Sub(PosledniRana) >= CasovaMezeraMeziRanou {
 					*HracovyZivoty -= 1
+					hudbaUbraniZivota.Rewind()
+					hudbaUbraniZivota.Play()
 					fmt.Println("Moje životy:", *HracovyZivoty)
 					PosledniRana = now
 				}
@@ -115,7 +117,7 @@ func main() {
 	HracovyZivoty := 5
 	PosledniRana := time.Now()
 	CasovaMezeraMeziRanou := 1 * time.Second
-	gke.NastavSouradnicivouMrizku(50)
+	//gke.NastavSouradnicivouMrizku(50)
 	gke.NastavUrovenLogovani(gke.LogError)
 	gke.NastavPozadi("./assetykehre/Pozadi.png")
 	gke.NastavRezimPozadi(gke.RezimPozadiVyplnit)
@@ -124,6 +126,9 @@ func main() {
 	hudbaVPozadiContext, hudbaVPozadiPlayer := NactuHudbu("./assetykehre/with_me.mp3")
 	_ = hudbaVPozadiContext
 	hudbaVPozadiPlayer.Play()
+
+	hudbaVPozadiContext2, hudbaVPozadiPlayer2 := NactuHudbuJednou("./assetykehre/losetrumpet.mp3")
+	_ = hudbaVPozadiContext2
 
 	kamen := gke.PridejBlok("./assetykehre/Rock Pile.png")
 	gke.NastavZvetseni(kamen, 0.9)
@@ -144,20 +149,28 @@ func main() {
 
 	pevnyBlokMraku(870, 1200, 0.1)
 
+	pevnyBlokMraku(850, 1200, 0.1)
+
+	pevnyBlokMraku(800, 1200, 0.1)
+
+	pevnyBlokMraku(550, 1120, 0.25)
+
+	pevnyBlokplatforma(200, 1120, 0.4)
+
 	//pevnyBlokMraku(300, 1850, 0.25)
 
-	/*vyherniCoin := gke.PridejNepritele("./assetykehre/coin 2.png", func(enemy *gke.Postava) []gke.Akce {
+	vyherniCoin := gke.PridejNepritele("./assetykehre/coin 2.png", func(enemy *gke.Postava) []gke.Akce {
 		if gke.ZjistiKontaktSHratelnouPostavou(enemy) {
-			ProhralJsi(&HracovyZivoty, "Vyhrál jsi! :)")
+			ProhralJsi(&HracovyZivoty, "Vyhral jsi! :)", hudbaVPozadiPlayer)
 		}
 		return []gke.Akce{}
 	})
-	gke.NastavPozici(&vyherniCoin.Blok, 750, 1244)
-	gke.NastavZvetseni(&vyherniCoin.Blok, 1)
+	gke.NastavPozici(&vyherniCoin.Blok, 210, 1050)
+	gke.NastavZvetseni(&vyherniCoin.Blok, 2)
 	gke.NastavBlokovani(&vyherniCoin.Blok, false)
 	gke.NastavAnimaci(vyherniCoin, gke.AkceJdeVPravo, false,
 		[]gke.Vyrez{
-			{X1: 0, Y1: 0, X2: 24, Y2: 24}})*/
+			{X1: 0, Y1: 0, X2: 24, Y2: 24}})
 
 	blok_cislo_n := 0.0
 	for blok_cislo_n <= 100 {
@@ -272,6 +285,8 @@ func main() {
 				now := time.Now()
 				if now.Sub(PosledniRana) >= CasovaMezeraMeziRanou {
 					HracovyZivoty -= 1
+					hudbaVPozadiPlayer2.Rewind()
+					hudbaVPozadiPlayer2.Play()
 					fmt.Println("Moje životy:", HracovyZivoty)
 					PosledniRana = now
 				}
@@ -286,8 +301,8 @@ func main() {
 
 	pevnyBlokplatforma(360, 1533, 0.3)
 
-	pridejNepritele_pacman(hratelna_postava, 1620, 100, 360, &HracovyZivoty, CasovaMezeraMeziRanou, hudbaVPozadiPlayer)
-	pridejNepritele_pacman(hratelna_postava, 1400, 100, 360, &HracovyZivoty, CasovaMezeraMeziRanou, hudbaVPozadiPlayer)
+	pridejNepritele_pacman(hratelna_postava, 1620, 100, 360, &HracovyZivoty, CasovaMezeraMeziRanou, hudbaVPozadiPlayer, hudbaVPozadiPlayer2)
+	pridejNepritele_pacman(hratelna_postava, 1400, 100, 360, &HracovyZivoty, CasovaMezeraMeziRanou, hudbaVPozadiPlayer, hudbaVPozadiPlayer2)
 
 	/*nepritel := gke.PridejNepritele(
 		"./assetykehre/pacman.png",
@@ -338,6 +353,68 @@ func main() {
 	gke.NastavBlokovani(&spike.Blok, false)
 	gke.NastavAnimaci(spike, gke.AkceJdeVPravo, false,
 		[]gke.Vyrez{{X1: 39, X2: 128, Y1: 67, Y2: 160}})
+
+	srdce := gke.PridejBlok("./assetykehre/heart.png")
+	gke.NastavPozici(srdce, 20, 20)
+	gke.NastavZvetseni(srdce, 0.7)
+	srdce2 := gke.PridejBlok("./assetykehre/heart.png")
+	gke.NastavPozici(srdce2, 20, 20)
+	gke.NastavZvetseni(srdce2, 0.7)
+	srdce3 := gke.PridejBlok("./assetykehre/heart.png")
+	gke.NastavPozici(srdce3, 20, 20)
+	gke.NastavZvetseni(srdce3, 0.7)
+	srdce4 := gke.PridejBlok("./assetykehre/heart.png")
+	gke.NastavPozici(srdce4, 20, 20)
+	gke.NastavZvetseni(srdce4, 0.7)
+	srdce5 := gke.PridejBlok("./assetykehre/heart.png")
+	gke.NastavPozici(srdce5, 20, 20)
+	gke.NastavZvetseni(srdce5, 0.7)
+	gke.NastavAktualizaci(func() {
+		X := gke.ZjistitPoziciX(&hratelna_postava.Blok)
+		Y := gke.ZjistitPoziciY(&hratelna_postava.Blok)
+		if HracovyZivoty == 5 {
+			gke.NastavPozici(srdce, X+40, Y-30)
+			gke.NastavPozici(srdce2, X+20, Y-30)
+			gke.NastavPozici(srdce3, X-0, Y-30)
+			gke.NastavPozici(srdce4, X-20, Y-30)
+			gke.NastavPozici(srdce5, X-40, Y-30)
+		}
+		if HracovyZivoty == 4 {
+			gke.NastavPozici(srdce, X+40, Y-30)
+			gke.NastavPozici(srdce2, X+20, Y-30)
+			gke.NastavPozici(srdce3, X-0, Y-30)
+			gke.NastavPozici(srdce4, X-20, Y-30)
+			gke.NastavPozici(srdce5, X-40, Y-1000)
+		}
+		if HracovyZivoty == 3 {
+			gke.NastavPozici(srdce, X+40, Y-30)
+			gke.NastavPozici(srdce2, X+20, Y-30)
+			gke.NastavPozici(srdce3, X-0, Y-30)
+			gke.NastavPozici(srdce4, X-20, Y-1000)
+			gke.NastavPozici(srdce5, X-1000, Y-1000)
+		}
+		if HracovyZivoty == 2 {
+			gke.NastavPozici(srdce, X+40, Y-30)
+			gke.NastavPozici(srdce2, X+20, Y-30)
+			gke.NastavPozici(srdce3, X-0, Y-1000)
+			gke.NastavPozici(srdce4, X-20, Y-1000)
+			gke.NastavPozici(srdce5, X-40, Y-1000)
+		}
+		if HracovyZivoty == 1 {
+			gke.NastavPozici(srdce, X+40, Y-30)
+			gke.NastavPozici(srdce2, X+20, Y-1000)
+			gke.NastavPozici(srdce3, X-0, Y-1000)
+			gke.NastavPozici(srdce4, X-20, Y-1000)
+			gke.NastavPozici(srdce5, X-40, Y-1000)
+		}
+		if HracovyZivoty == 0 {
+			gke.NastavPozici(srdce, X+40, Y-1000)
+			gke.NastavPozici(srdce2, X+20, Y-1000)
+			gke.NastavPozici(srdce3, X-0, Y-1000)
+			gke.NastavPozici(srdce4, X-20, Y-1000)
+			gke.NastavPozici(srdce5, X-40, Y-1000)
+		}
+	})
 
 	gke.SpustHru()
 }

@@ -314,6 +314,35 @@ func NactuHudbu(nazev_souboru string) (*audio.Context, *audio.Player) {
 	}
 	return context, player
 }
+
+func NactuHudbuJednou(nazev_souboru string) (*audio.Context, *audio.Player) {
+	context := audio.CurrentContext()
+	if context == nil {
+		context = audio.NewContext(160000)
+	}
+
+	soubor, err := os.ReadFile(nazev_souboru)
+	if err != nil {
+		fmt.Println("Soubor s hudbou se nepodařilo načíst", err)
+		os.Exit(1)
+	}
+	hudba, err := mp3.DecodeWithoutResampling(bytes.NewReader(soubor))
+	if err != nil {
+		fmt.Println("Soubor s hudbou se nepodařilo dekódovat", err)
+		os.Exit(1)
+	}
+
+	//io.NewReader
+
+	//smycka := audio.New(hudba, hudba.Length())
+	player, err := context.NewPlayer(hudba)
+	if err != nil {
+		fmt.Println("Nepovedlo se vytvořit přehrávač", err)
+		os.Exit(1)
+	}
+	return context, player
+}
+
 func Protinajise(a AnimovanaPostava, b AnimovanaPostava) bool {
 	obdelnikA := resolv.NewRectangleFromTopLeft(float64(a.misto.x), float64(a.misto.y), float64(a.obdelnikySAnimaci[0].Dx())*3, float64(a.obdelnikySAnimaci[0].Dy())*3)
 	obdelnikB := resolv.NewRectangleFromTopLeft(float64(b.misto.x), float64(b.misto.y), float64(b.obdelnikySAnimaci[0].Dx())*3, float64(b.obdelnikySAnimaci[0].Dy())*3)
